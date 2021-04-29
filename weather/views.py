@@ -9,6 +9,8 @@ def index(request):
     # city = 'Nairobi'
 
     err_msg = ''
+    message = ''
+    message_class = ''
     
     if request.method == 'POST':
         # print(request.POST)
@@ -24,11 +26,16 @@ def index(request):
                 if r['cod'] == 200:
                     form.save()
                 else:
-                    err_msg = 'City does not exist.'
+                    err_msg = 'City does not exist!'
             else:
-                err_msg = 'City already exists. Browse the page to find it'
+                err_msg = 'City is already added! Browse the page to find it'
     # print(err_msg)
-
+        if err_msg:
+            message = err_msg
+            message_class = 'is-danger'
+        else:
+            message = 'City added succesfully!'
+            message_class = 'is-success'
 
     form = CityForm()
 
@@ -50,6 +57,8 @@ def index(request):
 
     context = {
         'weather_data': weather_data,
-        'form': form
+        'form': form,
+        'message': message,
+        'message_class': message_class
     }
     return render(request, 'weather/weather.html', context)
