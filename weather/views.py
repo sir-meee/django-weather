@@ -8,10 +8,20 @@ def index(request):
     url = 'http://api.openweathermap.org/data/2.5/weather?q={}&units=metric&appid=48f737f5bee28dbe93b34fbb92f67ff2'
     # city = 'Nairobi'
 
+    err_msg = ''
+    
     if request.method == 'POST':
         # print(request.POST)
         form = CityForm(request.POST)
-        form.save()
+
+        if form.is_valid():
+            new_city = form.cleaned_data['name']
+            existing_city_count = City.objects.filter(name=new_city).count()
+            if existing_city_count == 0:
+                form.save()
+            else:
+                err_msg = 'City already exists. Browse the page to find it'
+
 
     form = CityForm()
 
