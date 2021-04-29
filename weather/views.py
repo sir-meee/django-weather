@@ -17,10 +17,17 @@ def index(request):
         if form.is_valid():
             new_city = form.cleaned_data['name']
             existing_city_count = City.objects.filter(name=new_city).count()
+
             if existing_city_count == 0:
-                form.save()
+                r = requests.get(url.format(new_city)).json()
+                # print(r)
+                if r['cod'] == 200:
+                    form.save()
+                else:
+                    err_msg = 'City does not exist.'
             else:
                 err_msg = 'City already exists. Browse the page to find it'
+    # print(err_msg)
 
 
     form = CityForm()
